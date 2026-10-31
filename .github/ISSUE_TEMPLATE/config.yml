@@ -1,0 +1,5 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Report a security vulnerability privately
+    url: https://github.com/OpenPhysical/OpenPhysical.Biometrics.NBIS/blob/master/SECURITY.md
+    about: Follow SECURITY.md and email security@mistial.dev. Do not report vulnerabilities or biometric data in public issues.

@@ -1,0 +1,23 @@
+OpenPhysical.Biometrics.NBIS
+Copyright (c) 2026 Mistial Developer
+
+OpenPhysical-authored wrapper, build, integration, and documentation code is
+licensed under the GNU General Public License, version 2 or (at your option)
+any later version. SPDX-License-Identifier: GPL-2.0-or-later
+
+This program is free software: you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free Software
+Foundation, either version 2 of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+PARTICULAR PURPOSE. See LICENSE for the full GNU General Public License text.
+
+Separately negotiated commercial licensing is available only for rights controlled
+by the applicable copyright holder. See COMMERCIAL-LICENSING.md. This notice does
+not grant a commercial license.
+
+Third-party material retains its original terms. NIST NBIS source/test material,
+mu-nit, the Bounded Contribution Policy, the Harmony-derived contributor agreement,
+and dependencies are described in THIRD_PARTY_NOTICES.md. Their licenses and notices
+are not replaced by this project's GPL or commercial licensing notices.

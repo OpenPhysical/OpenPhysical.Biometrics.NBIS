@@ -1,0 +1,56 @@
+{
+  "archive_url": "https://nigos.nist.gov/nist/nbis/test_v5_0_0.zip",
+  "archive_sha256": "5a1e0f7cb06ecb3ab7936e39bde97802a364f1398e37054ed195bff052b9ff00",
+  "files": {
+    "f2tog_nist.log": {
+      "source": "Test_5.0.0/bozorth3/execs/bozorth3/f2tog_nist.log",
+      "sha256": "730eb1f58d50b8add5b55359132a84e60e302db09e587e0e4afa9e9c8b755c76"
+    },
+    "1to1_1_nist.log": {
+      "source": "Test_5.0.0/bozorth3/execs/bozorth3/1to1_1_nist.log",
+      "sha256": "486148d5f559041d125f75c9594e848f25804915b596997d3dd9756059350fa5"
+    },
+    "a011p_04.xyt": {
+      "source": "Test_5.0.0/bozorth3/data/a011p_04.xyt",
+      "sha256": "71860c7e94d796dbdb94c84d86b474744345a90ee8d48153989711646b01d464"
+    },
+    "a011r_05.xyt": {
+      "source": "Test_5.0.0/bozorth3/data/a011r_05.xyt",
+      "sha256": "f717d6828e5b7608733d30d02e8ae2f9a35b2026061ab08904686fb3d76eba09"
+    },
+    "a011r_03.xyt": {
+      "source": "Test_5.0.0/bozorth3/data/a011r_03.xyt",
+      "sha256": "2475ba5a7b3a9c31bc1d55a89981e85ee92a394b5639665b0c571de1435e58ea"
+    },
+    "a011r_02.xyt": {
+      "source": "Test_5.0.0/bozorth3/data/a011r_02.xyt",
+      "sha256": "1d6287cf273ece1b53f79940c62df4314419bec1d666faf0b46f97d8b0ee4810"
+    },
+    "a011p_02.xyt": {
+      "source": "Test_5.0.0/bozorth3/data/a011p_02.xyt",
+      "sha256": "bdea13001583fa3db66f955f4e44fa21734adec9a759d337647ac9fd03dfda07"
+    },
+    "a011p_05.xyt": {
+      "source": "Test_5.0.0/bozorth3/data/a011p_05.xyt",
+      "sha256": "f12f431a85f22a76f1dc61e2d32c5ed5d08a60df5b9a9dfb33fa4b8d731e68da"
+    },
+    "a011r_04.xyt": {
+      "source": "Test_5.0.0/bozorth3/data/a011r_04.xyt",
+      "sha256": "435bdb04d878717f94fcf6540f1a8d6c91165b3ea9456e6ec315862431f09a07"
+    },
+    "a011p_03.xyt": {
+      "source": "Test_5.0.0/bozorth3/data/a011p_03.xyt",
+      "sha256": "041efee9edde41146f18f9a610db93881610d2efdd4553e3e705ee59af74399d"
+    },
+    "g001t2u_nist.xyt": {
+      "source": "Test_5.0.0/mindtct/execs/mindtct/g001/g001t2u_nist.xyt",
+      "sha256": "9ee7d081139efdb464f5f36c9d5a7e7f47ef2ac4aea08d65d22e2e23f2c8fac5"
+    },
+    "g001t2u.gray": {
+      "source": "Test_5.0.0/mindtct/data/g001t2u.eft",
+      "transformation": "Type-14 field 999, uncompressed 800x768 8-bit grayscale; exactly 614400 bytes",
+      "source_sha256": "c62743f41cb49f778e6977f155155c54d6e58827c3f970fc0925cf805e8fef2e",
+      "sha256": "bfae0685bdfe41ed72e7c871d45065569ac3f2f9dc1b115858086a7203f566c1"
+    }
+  }
+}

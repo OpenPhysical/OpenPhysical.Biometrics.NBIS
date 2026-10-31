@@ -1,0 +1,25 @@
+<Project>
+    <!-- Runtime names, filenames, and CI runners are maintained here together. -->
+    <ItemGroup>
+        <NbisRuntime Include="linux-x64">
+            <NativeFile>libopenphysical_nbis.so</NativeFile>
+            <Runner>ubuntu-22.04</Runner>
+        </NbisRuntime>
+        <NbisRuntime Include="linux-arm64">
+            <NativeFile>libopenphysical_nbis.so</NativeFile>
+            <Runner>ubuntu-22.04-arm</Runner>
+        </NbisRuntime>
+        <NbisRuntime Include="osx-x64">
+            <NativeFile>libopenphysical_nbis.dylib</NativeFile>
+            <Runner>macos-15-intel</Runner>
+        </NbisRuntime>
+        <NbisRuntime Include="osx-arm64">
+            <NativeFile>libopenphysical_nbis.dylib</NativeFile>
+            <Runner>macos-15</Runner>
+        </NbisRuntime>
+        <NbisRuntime Include="win-x64">
+            <NativeFile>openphysical_nbis.dll</NativeFile>
+            <Runner>windows-latest</Runner>
+        </NbisRuntime>
+    </ItemGroup>
+</Project>

@@ -1,0 +1,164 @@
+name: NBIS build and test
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  runtime-manifest:
+    runs-on: ubuntu-22.04
+    outputs:
+      matrix: ${{ steps.matrix.outputs.matrix }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - id: matrix
+        run: echo "matrix=$(python scripts/runtime_manifest.py --matrix)" >> "$GITHUB_OUTPUT"
+  formatting-and-documentation:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Restore pinned formatter
+        run: dotnet tool restore
+      - name: Check CSharpier formatting
+        run: dotnet csharpier check .
+      - name: Prove public API documentation enforcement
+        run: python scripts/verify-documentation-gate.py
+      - name: Verify SD04 fixture provenance and completeness
+        run: python scripts/import-sd04.py --verify
+  runtimes:
+    needs: runtime-manifest
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJSON(needs.runtime-manifest.outputs.matrix) }}
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: msys2/setup-msys2@v2
+        id: msys2
+        if: runner.os == 'Windows'
+        with:
+          msystem: UCRT64
+          install: mingw-w64-ucrt-x86_64-gcc mingw-w64-ucrt-x86_64-cmake mingw-w64-ucrt-x86_64-ninja
+      - name: Add Windows native toolchain
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: Add-Content $env:GITHUB_PATH "${{ steps.msys2.outputs.msys2-location }}\ucrt64\bin"
+      - name: Build native runtime
+        run: python scripts/build-nbis.py --rid ${{ matrix.rid }}
+      - name: NUnit wrapper and conversion tests
+        run: dotnet test OpenPhysical.Biometrics.NBIS.sln -c Release -m:1 -nr:false --collect:"XPlat Code Coverage" --results-directory artifacts/test-results
+      - name: Run compiled workflow examples
+        run: dotnet run --project examples/OpenPhysical.Biometrics.NBIS.Examples -c Release -- tests/fixtures/g001t2u.gray tests/fixtures/g001t2u.gray 800 768
+      - name: Run paired SD04 workflow examples
+        run: dotnet run --project examples/OpenPhysical.Biometrics.NBIS.Examples -c Release -- --sd04 tests/fixtures/sd04
+      - name: Verify package in isolation
+        run: |
+          dotnet pack src/OpenPhysical.Biometrics.NBIS -c Release -p:AllowPartialNbisRuntimes=true
+          dotnet pack src/OpenPhysical.Biometrics.NBIS.Cli -c Release -p:AllowPartialNbisRuntimes=true
+      - name: External package consumer and missing-runtime test
+        run: python scripts/test-nbis-package.py
+      - name: Plain µnit tests
+        run: python scripts/build-nbis.py --tests
+      - name: Run µnit
+        run: ctest --test-dir artifacts/native/${{ matrix.rid }}-tests --output-on-failure
+      - name: ASan build
+        if: runner.os != 'Windows'
+        run: python scripts/build-nbis.py --sanitizer asan
+      - name: ASan µnit checks
+        if: runner.os != 'Windows'
+        env:
+          ASAN_OPTIONS: ${{ runner.os == 'Linux' && 'detect_leaks=1' || 'detect_leaks=0' }}
+        run: ctest --test-dir artifacts/native/${{ matrix.rid }}-asan --output-on-failure
+      - name: UBSan build
+        if: runner.os != 'Windows'
+        run: python scripts/build-nbis.py --sanitizer ubsan
+      - name: UBSan µnit checks
+        if: runner.os != 'Windows'
+        env:
+          UBSAN_OPTIONS: halt_on_error=1
+        run: ctest --test-dir artifacts/native/${{ matrix.rid }}-ubsan --output-on-failure
+      - uses: actions/upload-artifact@v4
+        with:
+          name: nbis-runtime-${{ matrix.rid }}
+          path: artifacts/runtimes/
+      - uses: actions/upload-artifact@v4
+        with:
+          name: nbis-managed-coverage-${{ matrix.rid }}
+          path: artifacts/test-results/
+  native-coverage:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Measure native wrapper and algorithm coverage
+        run: python scripts/measure-native-coverage.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: nbis-native-coverage
+          path: artifacts/coverage/
+  collect:
+    needs: [runtimes, formatting-and-documentation, native-coverage]
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: nbis-runtime-*
+          merge-multiple: true
+          path: artifacts/runtimes
+      - name: Require all native runtime assets
+        run: python scripts/runtime_manifest.py --verify-assets artifacts/runtimes
+      - uses: actions/upload-artifact@v4
+        with:
+          name: nbis-all-runtimes
+          path: artifacts/runtimes/
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+      - name: Pack complete library and CLI
+        run: |
+          dotnet pack src/OpenPhysical.Biometrics.NBIS -c Release
+          dotnet pack src/OpenPhysical.Biometrics.NBIS.Cli -c Release
+      - uses: actions/upload-artifact@v4
+        with:
+          name: nbis-packages
+          path: artifacts/packages/*.nupkg
+  complete-package-consumers:
+    needs: [collect, runtime-manifest]
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJSON(needs.runtime-manifest.outputs.matrix) }}
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/download-artifact@v4
+        with:
+          name: nbis-packages
+          path: artifacts/packages
+      - name: Consume complete library and CLI packages
+        run: python scripts/test-nbis-package.py --require-all-runtimes
+# CI verifies packages locally and uploads assets; publication is a separate action.

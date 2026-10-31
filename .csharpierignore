@@ -1,0 +1,4 @@
+artifacts/
+native/nbis/upstream/
+tests/native/munit/
+tests/fixtures/

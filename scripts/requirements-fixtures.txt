@@ -1,0 +1,2 @@
+# Only needed when importing PNG fixtures; normal builds/tests use raw committed pixels.
+Pillow==12.2.0

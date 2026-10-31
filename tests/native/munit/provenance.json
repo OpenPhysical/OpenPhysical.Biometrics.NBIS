@@ -1,0 +1,10 @@
+{
+  "repository": "https://github.com/nemequ/munit",
+  "revision": "fbbdf1467eb0d04a6ee465def2e529e4c87f2118",
+  "sha256": {
+    "munit.c": "1f4981ca07e128696292836fc4c34b370bd562ca60da993cd89e6f101a435482",
+    "munit.h": "046e4bdbaa0e232897925e04ca3c3b61419f5b3830aed8bed54e45c197202d88",
+    "COPYING": "551a04ab9278e48e3d4ef8b0381ad54e54e84fac1a225c50247fa3669dfdef75",
+    "README.md": "31620bf36b6835fbfb61272b6423a27a6c1b4e86425038ad0625ef445bb91b67"
+  }
+}

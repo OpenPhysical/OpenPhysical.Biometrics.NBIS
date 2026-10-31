@@ -1,0 +1,8 @@
+artifacts/
+**/bin/
+**/obj/
+TestResults/
+*.nupkg
+*.user
+.DS_Store
+__pycache__/

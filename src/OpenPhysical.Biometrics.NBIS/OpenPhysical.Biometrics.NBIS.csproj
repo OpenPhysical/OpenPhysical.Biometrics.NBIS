@@ -1,0 +1,31 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <IsPackable>true</IsPackable>
+        <PackageId>OpenPhysical.Biometrics.NBIS</PackageId>
+        <Description>Standalone in-memory NIST NBIS MINDTCT extraction and Bozorth3 matching.</Description>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+    </PropertyGroup>
+    <ItemGroup>
+        <EmbeddedResource
+            Include="../../runtimes.props"
+            LogicalName="OpenPhysical.Biometrics.NBIS.runtimes.props"
+        />
+        <InternalsVisibleTo Include="OpenPhysical.Biometrics.NBIS.Tests" />
+        <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.0" />
+        <PackageReference
+            Include="Microsoft.Extensions.DependencyInjection.Abstractions"
+            Version="10.0.0"
+        />
+        <None
+            Include="../../artifacts/runtimes/**/*"
+            Link="runtimes/%(RecursiveDir)%(Filename)%(Extension)"
+            Pack="true"
+            PackagePath="runtimes/%(RecursiveDir)%(Filename)%(Extension)"
+            CopyToOutputDirectory="PreserveNewest"
+            CopyToPublishDirectory="PreserveNewest"
+        />
+        <None Include="../../README.md" Pack="true" PackagePath="/" />
+        <None Include="../../native/nbis/NOTICE.txt" Pack="true" PackagePath="licenses/" />
+    </ItemGroup>
+</Project>

@@ -2,3 +2,5 @@
 /native/nbis/upstream/** -text
 /tests/native/munit/** -text
 /tests/fixtures/** -text
+/tests/fixtures/**/*.gray8 binary
+/tests/fixtures/*.gray binary
