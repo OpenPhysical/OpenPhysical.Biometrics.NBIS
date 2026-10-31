@@ -1,0 +1,4 @@
+* text=auto eol=lf
+/native/nbis/upstream/** -text
+/tests/native/munit/** -text
+/tests/fixtures/** -text
