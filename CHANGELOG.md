@@ -9,6 +9,9 @@ see the [compatibility policy](CONTRIBUTING.md#versioning-and-compatibility).
 
 ## Unreleased
 
+- Fix CodeQL arithmetic and native correctness findings, retaining verifiable
+  original NIST source receipts and adding overflow regression coverage.
+
 ## 1.0.0 - 2026-11-01
 
 - First stable library and CLI release, with the compatibility contract described

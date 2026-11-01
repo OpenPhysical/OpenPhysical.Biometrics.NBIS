@@ -493,7 +493,7 @@ int interpolate_direction_map(int *direction_map, int *low_contrast_map,
    print2log("INTERPOLATE DIRECTION MAP\n");
 
    /* Allocate output (interpolated) Direction Map. */
-   omap = (int *)malloc(mw*mh*sizeof(int));
+   omap = (int *)malloc((size_t)mw*mh*sizeof(int));
    if(omap == (int *)NULL){
       fprintf(stderr,
               "ERROR : interpolate_direction_map : malloc : omap\n");
@@ -636,7 +636,7 @@ int interpolate_direction_map(int *direction_map, int *low_contrast_map,
    }
 
    /* Copy the interpolated directions into the input map. */
-   memcpy(direction_map, omap, mw*mh*sizeof(int));
+   memcpy(direction_map, omap, (size_t)mw*mh*sizeof(int));
    /* Deallocate the working memory. */
    free(omap);
 
@@ -729,7 +729,7 @@ int pixelize_map(int **omap, const int iw, const int ih,
    int *blkoffs, bw, bh, bi;
    int *spptr, *pptr;
 
-   pmap = (int *)malloc(iw*ih*sizeof(int));
+   pmap = (int *)malloc((size_t)iw*ih*sizeof(int));
    if(pmap == (int *)NULL){
       fprintf(stderr, "ERROR : pixelize_map : malloc : pmap\n");
       return(-590);
