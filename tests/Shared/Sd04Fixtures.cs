@@ -4,8 +4,9 @@
 namespace OpenPhysical.Biometrics.NBIS.Fixtures;
 
 using System.Collections.Immutable;
-using System.Security.Cryptography;
 using System.Text.Json;
+using Org.BouncyCastle.Crypto.Digests;
+using Org.BouncyCastle.Utilities.Encoders;
 
 // Shared only by the test and example projects; paths and pairing come from one manifest.
 internal sealed class Sd04Fixtures
@@ -70,17 +71,22 @@ internal sealed record Sd04Image(
         var pixels = File.ReadAllBytes(RawPath);
         try
         {
-            if (
-                !Convert
-                    .ToHexString(SHA256.HashData(pixels))
-                    .Equals(Sha256, StringComparison.OrdinalIgnoreCase)
-            )
+            if (!Digest(pixels).Equals(Sha256, StringComparison.OrdinalIgnoreCase))
                 throw new InvalidDataException("Fixture pixel checksum mismatch.");
             return new FingerprintImage(pixels, Width, Height, DotsPerInch);
         }
         finally
         {
-            CryptographicOperations.ZeroMemory(pixels);
+            Array.Clear(pixels);
         }
+    }
+
+    private static string Digest(byte[] data)
+    {
+        var digest = new Sha256Digest();
+        digest.BlockUpdate(data);
+        var hash = new byte[digest.GetDigestSize()];
+        _ = digest.DoFinal(hash);
+        return Hex.ToHexString(hash);
     }
 }

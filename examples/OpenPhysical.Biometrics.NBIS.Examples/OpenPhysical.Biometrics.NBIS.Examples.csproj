@@ -6,6 +6,7 @@
     </PropertyGroup>
     <ItemGroup>
         <Compile Include="../../tests/Shared/Sd04Fixtures.cs" Link="Fixtures/Sd04Fixtures.cs" />
+        <PackageReference Include="BouncyCastle.Cryptography" Version="2.6.1" />
         <ProjectReference Include="../../src/OpenPhysical.Biometrics.NBIS/OpenPhysical.Biometrics.NBIS.csproj" />
     </ItemGroup>
 </Project>
