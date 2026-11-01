@@ -9,6 +9,14 @@ see the [compatibility policy](CONTRIBUTING.md#versioning-and-compatibility).
 
 ## Unreleased
 
+## 1.0.0 - 2026-11-01
+
+- First stable library and CLI release, with the compatibility contract described
+  in CONTRIBUTING.md.
+- Publish both packages automatically to the OpenPhysical NuGet organization when
+  a GitHub release is published, after all runtime and package-consumer checks pass.
+  Authentication uses NuGet trusted publishing without stored API keys.
+
 ## 0.1.0-beta.1 - 2026-10-31
 
 ### Release review fixes
