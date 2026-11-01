@@ -9,6 +9,10 @@
         <RunAnalyzersDuringBuild>true</RunAnalyzersDuringBuild>
         <WarningsAsErrors>$(WarningsAsErrors);CS1591</WarningsAsErrors>
         <Deterministic>true</Deterministic>
+        <ContinuousIntegrationBuild Condition="'$(GITHUB_ACTIONS)' == 'true'"
+            >true</ContinuousIntegrationBuild>
+        <IncludeSymbols>true</IncludeSymbols>
+        <SymbolPackageFormat>snupkg</SymbolPackageFormat>
         <!-- Package 1.3.0 otherwise selects its net9 tool on a net10 SDK. -->
         <CSharpier_FrameworkVersion>net10.0</CSharpier_FrameworkVersion>
         <CSharpier_Bypass

@@ -9,6 +9,8 @@ see the [compatibility policy](CONTRIBUTING.md#versioning-and-compatibility).
 
 ## Unreleased
 
+- Publish portable symbol packages and normalize CI build paths (#7).
+
 - Fix CodeQL arithmetic and native correctness findings, retaining verifiable
   original NIST source receipts and adding overflow regression coverage.
 
