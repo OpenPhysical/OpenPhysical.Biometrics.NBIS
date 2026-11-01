@@ -16,6 +16,7 @@ see the [compatibility policy](CONTRIBUTING.md#versioning-and-compatibility).
 - Publish both packages automatically to the OpenPhysical NuGet organization when
   a GitHub release is published, after all runtime and package-consumer checks pass.
   Authentication uses NuGet trusted publishing without stored API keys.
+- Run feature-branch CI on pull requests only, avoiding duplicate push checks.
 
 ## 0.1.0-beta.1 - 2026-10-31
 

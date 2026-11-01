@@ -1,6 +1,7 @@
 name: NBIS build and test
 on:
   push:
+    branches: [master]
   pull_request:
   workflow_dispatch:
   workflow_call:
