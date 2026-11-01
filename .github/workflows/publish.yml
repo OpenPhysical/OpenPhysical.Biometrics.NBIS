@@ -1,0 +1,77 @@
+name: Publish NuGet release
+on:
+  release:
+    types: [published]
+permissions:
+  contents: read
+concurrency:
+  group: nuget-release-${{ github.event.release.tag_name }}
+  cancel-in-progress: false
+jobs:
+  validate-release:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Require release tag to match the shared package version
+        env:
+          RELEASE_TAG: ${{ github.event.release.tag_name }}
+        run: |
+          python - <<'PY'
+          import os
+          import xml.etree.ElementTree as ET
+          version = ET.parse('Directory.Build.props').findtext('./PropertyGroup/Version')
+          if os.environ['RELEASE_TAG'] != f'v{version}':
+              raise SystemExit(f'Release tag must be v{version}')
+          PY
+  verify:
+    needs: validate-release
+    uses: ./.github/workflows/ci.yml
+  publish:
+    needs: verify
+    runs-on: ubuntu-22.04
+    environment: nuget-production
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: nbis-packages
+          path: artifacts/packages
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+      - name: Verify package identities and release versions
+        env:
+          RELEASE_TAG: ${{ github.event.release.tag_name }}
+        run: |
+          python - <<'PY'
+          import os
+          from pathlib import Path
+          import xml.etree.ElementTree as ET
+          from zipfile import ZipFile
+          expected = {'OpenPhysical.Biometrics.NBIS', 'OpenPhysical.Biometrics.NBIS.Cli'}
+          packages = list(Path('artifacts/packages').glob('*.nupkg'))
+          if len(packages) != len(expected):
+              raise SystemExit('Expected exactly the library and CLI packages')
+          for package in packages:
+              with ZipFile(package) as archive:
+                  nuspecs = [name for name in archive.namelist() if name.endswith('.nuspec')]
+                  if len(nuspecs) != 1:
+                      raise SystemExit(f'Invalid package manifest: {package}')
+                  metadata = ET.fromstring(archive.read(nuspecs[0])).find('{*}metadata')
+                  package_id = metadata.findtext('{*}id')
+                  version = metadata.findtext('{*}version')
+                  if package_id not in expected or f'v{version}' != os.environ['RELEASE_TAG']:
+                      raise SystemExit(f'Unexpected package identity or version: {package}')
+                  expected.remove(package_id)
+          PY
+      - name: Authenticate with NuGet trusted publishing
+        uses: NuGet/login@8d196754b4036150537f80ac539e15c2f1028841 # v1.2.0
+        id: login
+        with:
+          user: ${{ vars.NUGET_USER }}
+      - name: Publish library and CLI
+        env:
+          NUGET_API_KEY: ${{ steps.login.outputs.NUGET_API_KEY }}
+        run: dotnet nuget push 'artifacts/packages/*.nupkg' --api-key "$NUGET_API_KEY" --source https://api.nuget.org/v3/index.json --skip-duplicate
