@@ -25,6 +25,9 @@ jobs:
           PY
   verify:
     needs: validate-release
+    permissions:
+      contents: read
+      id-token: write
     uses: ./.github/workflows/ci.yml
   publish:
     needs: verify
