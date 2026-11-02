@@ -7,6 +7,7 @@ on:
   workflow_call:
 permissions:
   contents: read
+  id-token: write
 jobs:
   runtime-manifest:
     runs-on: ubuntu-22.04
@@ -69,6 +70,13 @@ jobs:
         run: python scripts/build-nbis.py --rid ${{ matrix.rid }}
       - name: NUnit wrapper and conversion tests
         run: dotnet test OpenPhysical.Biometrics.NBIS.sln -c Release -m:1 -nr:false --collect:"XPlat Code Coverage" --results-directory artifacts/test-results
+      - name: Upload managed coverage to Qlty
+        if: matrix.rid == 'linux-x64' && github.event.pull_request.head.repo.fork != true
+        uses: qltysh/qlty-action/coverage@v2
+        with:
+          oidc: true
+          files: artifacts/test-results/**/coverage.cobertura.xml
+          total-parts-count: 2
       - name: Run compiled workflow examples
         run: dotnet run --project examples/OpenPhysical.Biometrics.NBIS.Examples -c Release -- tests/fixtures/g001t2u.gray tests/fixtures/g001t2u.gray 800 768
       - name: Run paired SD04 workflow examples
@@ -116,6 +124,17 @@ jobs:
           python-version: '3.12'
       - name: Measure native wrapper and algorithm coverage
         run: python scripts/measure-native-coverage.py
+      - name: Convert native coverage to Cobertura
+        run: |
+          python -m pip install gcovr==8.3
+          gcovr --root . --filter native/nbis/ --merge-mode-functions=separate --cobertura artifacts/coverage/native.cobertura.xml artifacts/native/coverage
+      - name: Upload native coverage to Qlty
+        if: github.event.pull_request.head.repo.fork != true
+        uses: qltysh/qlty-action/coverage@v2
+        with:
+          oidc: true
+          files: artifacts/coverage/native.cobertura.xml
+          total-parts-count: 2
       - uses: actions/upload-artifact@v4
         with:
           name: nbis-native-coverage
