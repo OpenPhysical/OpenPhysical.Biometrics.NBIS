@@ -70,3 +70,17 @@ Reference fixture hashes and transformation provenance are under
 `tests/fixtures`. Expected XYT fields
 and scores come from NIST's test archive.
 The CI matrix builds and tests each runtime.
+
+## Reviewed source corrections (1.0.1)
+
+The original `upstream-sha256.json` receipts remain unchanged. CodeQL fixes are
+applied to checked-in NIST sources so scanning and compilation inspect the same
+corrected expressions. `source-corrections.json` records each exact edit and
+the corrected file hash. The build reverses the edits in memory and checks the
+original NIST hash. Unrecorded edits and inventory mismatches fail verification.
+Earlier generated allocation/platform adaptations remain in place.
+
+The CodeQL-reported allocation and byte-count products widen before
+multiplication. This is not a blanket rewrite of all upstream size arithmetic;
+other int products remain, including the byte-image allocations in detect.c
+and morph_TF_map. The wrapper image-dimension limits remain unchanged.

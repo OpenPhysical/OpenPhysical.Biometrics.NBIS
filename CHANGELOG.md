@@ -9,6 +9,13 @@ see the [compatibility policy](CONTRIBUTING.md#versioning-and-compatibility).
 
 ## Unreleased
 
+## 1.0.1 - 2026-11-01
+
+- Publish portable symbol packages and normalize CI build paths (#7).
+
+- Fix CodeQL arithmetic and native correctness findings, retaining verifiable
+  original NIST source receipts and adding overflow regression coverage.
+
 ## 1.0.0 - 2026-11-01
 
 - First stable library and CLI release, with the compatibility contract described

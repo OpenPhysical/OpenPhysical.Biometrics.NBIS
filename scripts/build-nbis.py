@@ -27,9 +27,8 @@ if rid not in {entry["rid"] for entry in RUNTIMES}:
 if not rid.startswith(os_name + "-") or (rid != f"{os_name}-{arch}" and os_name != "osx"):
     parser.error("Use a native runner for the requested runtime; macOS alone supports cross-building the other architecture.")
 source = ROOT / "native/nbis"
-for name, expected in json.loads((source / "upstream-sha256.json").read_text()).items():
-    if hashlib.sha256((source / "upstream" / name).read_bytes()).hexdigest() != expected:
-        raise SystemExit(f"Upstream source checksum mismatch: {name}")
+from source_provenance import verify
+verify(source)
 if args.sanitizer or args.tests:
     munit = ROOT / "tests/native/munit"
     for name, expected in json.loads((munit / "provenance.json").read_text())["sha256"].items():

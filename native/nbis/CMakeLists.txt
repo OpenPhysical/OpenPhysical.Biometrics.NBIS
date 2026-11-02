@@ -12,17 +12,11 @@ if(OP_NBIS_SANITIZERS AND NOT CMAKE_C_COMPILER_ID MATCHES "Clang|GNU")
 endif()
 file(GLOB MINDTCT CONFIGURE_DEPENDS upstream/mindtct/src/lib/mindtct/*.c)
 # Verify provenance even when configuring CMake directly rather than through Python.
-file(READ "${CMAKE_CURRENT_SOURCE_DIR}/upstream-sha256.json" UPSTREAM_HASHES)
-string(JSON UPSTREAM_COUNT LENGTH "${UPSTREAM_HASHES}")
-math(EXPR UPSTREAM_LAST "${UPSTREAM_COUNT} - 1")
-foreach(INDEX RANGE ${UPSTREAM_LAST})
-  string(JSON NAME MEMBER "${UPSTREAM_HASHES}" ${INDEX})
-  string(JSON EXPECTED GET "${UPSTREAM_HASHES}" "${NAME}")
-  file(SHA256 "${CMAKE_CURRENT_SOURCE_DIR}/upstream/${NAME}" ACTUAL)
-  if(NOT ACTUAL STREQUAL EXPECTED)
-    message(FATAL_ERROR "Upstream source checksum mismatch: ${NAME}")
-  endif()
-endforeach()
+find_package(Python3 REQUIRED COMPONENTS Interpreter)
+execute_process(COMMAND "${Python3_EXECUTABLE}"
+  "${CMAKE_CURRENT_SOURCE_DIR}/../../scripts/source_provenance.py"
+  "${CMAKE_CURRENT_SOURCE_DIR}" COMMAND_ERROR_IS_FATAL ANY)
+
 
 # Fail closed if an upstream change makes any adaptation ambiguous or inapplicable.
 function(op_replace_once VARIABLE BEFORE AFTER)

@@ -1,0 +1,71 @@
+{
+  "mindtct/src/lib/mindtct/maps.c": {
+    "sha256": "8771e03e38a5e6a2ebb6a4a589e9c1d42e776f84bbe2d0be1bd9c4c70cfc67b8",
+    "hunks": [
+      {
+        "line": 495,
+        "before": [
+          "   omap = (int *)malloc(mw*mh*sizeof(int));\n"
+        ],
+        "after": [
+          "   omap = (int *)malloc((size_t)mw*mh*sizeof(int));\n"
+        ]
+      },
+      {
+        "line": 638,
+        "before": [
+          "   memcpy(direction_map, omap, mw*mh*sizeof(int));\n"
+        ],
+        "after": [
+          "   memcpy(direction_map, omap, (size_t)mw*mh*sizeof(int));\n"
+        ]
+      },
+      {
+        "line": 731,
+        "before": [
+          "   pmap = (int *)malloc(iw*ih*sizeof(int));\n"
+        ],
+        "after": [
+          "   pmap = (int *)malloc((size_t)iw*ih*sizeof(int));\n"
+        ]
+      }
+    ]
+  },
+  "mindtct/src/lib/mindtct/binar.c": {
+    "sha256": "739eb25a930682fd1e913a70a7935b8041b2593bcb53c1d3d7e826a22ccde848",
+    "hunks": [
+      {
+        "line": 217,
+        "before": [
+          "   bdata = (unsigned char *)malloc(bw*bh*sizeof(unsigned char));\n"
+        ],
+        "after": [
+          "   bdata = (unsigned char *)malloc((size_t)bw*bh*sizeof(unsigned char));\n"
+        ]
+      },
+      {
+        "line": 299,
+        "before": [
+          "   bdata = (unsigned char *)malloc(bw*bh*sizeof(unsigned char));\n"
+        ],
+        "after": [
+          "   bdata = (unsigned char *)malloc((size_t)bw*bh*sizeof(unsigned char));\n"
+        ]
+      }
+    ]
+  },
+  "mindtct/src/lib/mindtct/quality.c": {
+    "sha256": "8afbcfc730a221109792459da929d9c091f3630f6f7a810cfcfe85c6922ec931",
+    "hunks": [
+      {
+        "line": 117,
+        "before": [
+          "   QualMap = (int *)malloc(map_w * map_h * sizeof(int));\n"
+        ],
+        "after": [
+          "   QualMap = (int *)malloc((size_t)map_w * map_h * sizeof(int));\n"
+        ]
+      }
+    ]
+  }
+}
