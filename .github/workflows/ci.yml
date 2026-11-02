@@ -7,7 +7,6 @@ on:
   workflow_call:
 permissions:
   contents: read
-  id-token: write
 jobs:
   runtime-manifest:
     runs-on: ubuntu-22.04
@@ -43,6 +42,9 @@ jobs:
       - name: Verify SD04 fixture provenance and completeness
         run: python scripts/import-sd04.py --verify
   runtimes:
+    permissions:
+      contents: read
+      id-token: write
     needs: runtime-manifest
     strategy:
       fail-fast: false
@@ -116,6 +118,9 @@ jobs:
           name: nbis-managed-coverage-${{ matrix.rid }}
           path: artifacts/test-results/
   native-coverage:
+    permissions:
+      contents: read
+      id-token: write
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
@@ -140,6 +145,9 @@ jobs:
           name: nbis-native-coverage
           path: artifacts/coverage/
   coverage-complete:
+    permissions:
+      contents: read
+      id-token: write
     needs: [runtimes, native-coverage]
     if: github.event.pull_request.head.repo.fork != true
     runs-on: ubuntu-22.04
